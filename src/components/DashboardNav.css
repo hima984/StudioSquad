@@ -1,0 +1,263 @@
+/* ─────────────────────────────────────────────────────────────────
+   DashboardNav.css  –  Shared sidebar styles
+   Imported globally via index.css so all pages pick it up
+───────────────────────────────────────────────────────────────── */
+
+/* ── Sidebar ─────────────────────────────────────────────────── */
+.dash-nav {
+  width: 13rem;
+  flex-shrink: 0;
+  background: #4e342e;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1rem;
+  gap: 2rem;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+/* Logo */
+.dash-nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.25rem;
+}
+
+.dash-nav-logo-icon {
+  width: 1.85rem;
+  height: 1.85rem;
+  border-radius: 0.5rem;
+  background: #d35400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dash-nav-logo span {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: white;
+}
+
+/* User card */
+.dash-nav-user {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.5rem;
+  border-radius: 0.75rem;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.dash-nav-user:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.dash-nav-avatar {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f6ad55, #f6e05e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #4e342e;
+  font-size: 0.78rem;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.2);
+}
+
+.dash-nav-user-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: white;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dash-nav-user-sub {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Nav links */
+.dash-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+}
+
+.dash-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.75rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+}
+
+.dash-nav-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+.dash-nav-item.active {
+  background: rgba(255, 255, 255, 0.14);
+  color: white;
+}
+
+/* Footer */
+.dash-nav-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 0.875rem;
+}
+
+.dash-nav-footer-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+  border: none;
+  width: 100%;
+  color: rgba(255, 255, 255, 0.45);
+  text-decoration: none;
+}
+
+.dash-nav-footer-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+.dash-nav-footer-btn.danger:hover {
+  background: rgba(239, 68, 68, 0.12);
+  color: #fca5a5;
+}
+
+/* ── Mobile Top Bar (hidden on desktop) ──────────────────── */
+.dash-mobile-bar {
+  display: none;
+}
+
+/* ── Mobile Overlay + Drawer ─────────────────────────────── */
+.dash-mobile-overlay {
+  display: none;
+}
+
+/* ── Hamburger Button ────────────────────────────────────── */
+.dash-hamburger {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem;
+  border-radius: 0.5rem;
+  transition: background 0.2s;
+}
+
+.dash-hamburger:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ── Drawer Close Button ─────────────────────────────────── */
+.dash-drawer-close {
+  align-self: flex-end;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 0.3rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+
+.dash-drawer-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+/* ── Responsive breakpoint ───────────────────────────────── */
+@media (max-width: 768px) {
+  /* Hide desktop sidebar */
+  .dash-nav {
+    display: none;
+  }
+
+  /* Show mobile top bar */
+  .dash-mobile-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #4e342e;
+    padding: 0.75rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Show overlay */
+  .dash-mobile-overlay {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 200;
+    animation: fadeIn 0.2s ease;
+  }
+
+  /* Slide-in drawer */
+  .dash-mobile-drawer {
+    width: 13.5rem;
+    height: 100%;
+    background: #4e342e;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1.5rem;
+    overflow-y: auto;
+    animation: slideIn 0.25s ease;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}

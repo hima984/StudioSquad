@@ -1,0 +1,367 @@
+/* Login.css - Simple styling for beginner readability */
+
+/* Main page layout */
+.login-page {
+  display: flex;
+  min-height: 100vh;
+  background-color: #3e2723;
+  color: white;
+  font-family: sans-serif;
+}
+
+/* ───────────────────────────────────────────────────────── */
+/* Left side: Artwork Panel */
+/* ───────────────────────────────────────────────────────── */
+.login-left-panel {
+  display: none; /* Hidden on small screens */
+  position: relative;
+  margin: 1rem;
+  border-radius: 1.5rem;
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .login-left-panel {
+    display: block;
+    width: 44%;
+    flex-shrink: 0;
+  }
+}
+
+.login-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.login-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(44, 26, 18, 0.8), rgba(44, 26, 18, 0.2));
+}
+
+.login-logo {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: bold;
+  font-size: 1.125rem;
+}
+
+.logo-icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  background-color: #d35400;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-quote {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 2rem;
+  right: 2rem;
+}
+
+.login-quote h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.login-quote p {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.875rem;
+  margin-bottom: 1.25rem;
+}
+
+.testimonial {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.testimonial p {
+  color: rgba(255, 255, 255, 0.8);
+  font-style: italic;
+  margin-bottom: 0.75rem;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.author-avatar {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: linear-gradient(to bottom right, #fca5a5, #fde047);
+  color: #4e342e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.author-info h4 {
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+.author-info span {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+
+/* ───────────────────────────────────────────────────────── */
+/* Right side: Form Panel */
+/* ───────────────────────────────────────────────────────── */
+.login-right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1.5rem;
+  overflow-y: auto;
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  font-size: 0.875rem;
+  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 420px;
+}
+
+.back-link:hover {
+  color: white;
+}
+
+.mobile-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  font-weight: bold;
+}
+
+@media (min-width: 1024px) {
+  .mobile-logo {
+    display: none;
+  }
+}
+
+.login-form-container {
+  width: 100%;
+  max-width: 420px;
+}
+
+.login-title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  line-height: 1.2;
+}
+
+.text-orange {
+  color: #d35400;
+}
+
+.social-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.875rem;
+  border-radius: 0.75rem;
+  background-color: #f4ede4;
+  color: #4e342e;
+  font-weight: bold;
+  font-size: 0.875rem;
+  border: none;
+  cursor: pointer;
+}
+
+.social-btn:hover {
+  background-color: #ede3d8;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.divider span {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.input-container {
+  position: relative;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border-radius: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.form-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.form-input:focus {
+  border-color: #d35400;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.form-input.error {
+  border-color: #f87171;
+}
+
+.error-text {
+  color: #fca5a5;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.icon-button {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+}
+
+.icon-button:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.25rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.forgot-link {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.75rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.forgot-link:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.submit-btn {
+  margin-top: 0.5rem;
+  padding: 0.875rem;
+  border-radius: 0.75rem;
+  background-color: #f4ede4;
+  color: #4e342e;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: white;
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.signup-link-container {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.signup-link-container a {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: bold;
+  text-decoration: underline;
+  margin-left: 0.25rem;
+}
+
+.signup-link-container a:hover {
+  color: #d35400;
+}

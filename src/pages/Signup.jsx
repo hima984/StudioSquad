@@ -1,0 +1,300 @@
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { Eye, EyeOff, Brush, ArrowLeft } from 'lucide-react';
+
+import { signUpWithEmail, signInWithGoogle } from '../firebase/auth';
+import { validateEmail, validatePassword } from '../utils/validators';
+
+/* ── Inline input component styled to match the mockup ─────── */
+const AuthInput = ({ id, label, type = 'text', placeholder, value, onChange, error, rightElement }) => (
+  <div className="flex flex-col gap-1.5">
+    <label htmlFor={id} className="text-sm font-semibold text-white/90 tracking-wide">
+      {label}
+    </label>
+    <div className="relative">
+      <input
+        id={id}
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        className={`w-full px-4 py-3.5 rounded-xl bg-white/10 border ${
+          error ? 'border-red-400/70' : 'border-white/20'
+        } text-white placeholder-white/35 text-sm outline-none transition-all duration-200
+          focus:border-[#d35400]/80 focus:bg-white/15 focus:ring-2 focus:ring-[#d35400]/20
+          backdrop-blur-sm pr-${rightElement ? '12' : '4'}`}
+      />
+      {rightElement && (
+        <div className="absolute right-4 top-1/2 -translate-y-1/2">{rightElement}</div>
+      )}
+    </div>
+    {error && <p className="text-red-300 text-xs font-medium mt-0.5">{error}</p>}
+  </div>
+);
+
+/* ── Social button ─────────────────────────────────────────── */
+const SocialBtn = ({ onClick, disabled, children }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    disabled={disabled}
+    className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl
+      bg-[#f4ede4] hover:bg-[#ede3d8] text-[#4e342e] font-semibold text-sm
+      transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg
+      disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+  >
+    {children}
+  </button>
+);
+
+/* ── Google icon SVG ──────────────────────────────────────── */
+const GoogleIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24">
+    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+  </svg>
+);
+
+/* ── Apple icon SVG ────────────────────────────────────────── */
+const AppleIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+  </svg>
+);
+
+/* ── MAIN SIGNUP COMPONENT ─────────────────────────────────── */
+const Signup = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ email: '', password: '', confirmPassword: '', agreedToTerms: false });
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const handleChange = (e) => {
+    const { id, value, type, checked } = e.target;
+    setFormData(prev => ({ ...prev, [id]: type === 'checkbox' ? checked : value }));
+    if (errors[id]) setErrors(prev => ({ ...prev, [id]: '' }));
+  };
+
+  const handleValidation = () => {
+    let newErrors = {};
+    const emailError = validateEmail(formData.email);
+    if (emailError) newErrors.email = emailError;
+    const passwordError = validatePassword(formData.password);
+    if (passwordError) newErrors.password = passwordError;
+    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
+    if (!formData.agreedToTerms) newErrors.agreedToTerms = 'You must agree to the Terms & Conditions';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!handleValidation()) return;
+    setIsLoading(true);
+    const { user, error } = await signUpWithEmail(formData.email, formData.password);
+    setIsLoading(false);
+    if (error) toast.error(error);
+    else if (user) { toast.success('Welcome to StudioSquad! 🎨'); navigate('/onboard'); }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setGoogleLoading(true);
+    const { user, error } = await signInWithGoogle();
+    setGoogleLoading(false);
+    if (error) toast.error(error);
+    // New Google users also go through onboarding to set their interests
+    else if (user) { toast.success('Welcome to StudioSquad! 🎨'); navigate('/onboard'); }
+  };
+
+  return (
+    <div className="min-h-screen flex bg-[#3e2723]">
+
+      {/* ── LEFT – Artwork Panel ─────────────────────────────── */}
+      <div className="hidden lg:block lg:w-[44%] xl:w-[42%] relative flex-shrink-0 m-4 rounded-3xl overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1503387837-b154d5074bd2?w=900&q=85"
+          alt="Artist workspace"
+          className="w-full h-full object-cover"
+        />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#2c1a12]/80 via-transparent to-[#2c1a12]/20" />
+        {/* Logo top-left */}
+        <div className="absolute top-8 left-8 flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-xl bg-[#d35400] flex items-center justify-center shadow-lg">
+            <Brush size={18} className="text-white" />
+          </div>
+          <span className="text-white font-bold text-lg tracking-tight">StudioSquad</span>
+        </div>
+        {/* Bottom quote */}
+        <div className="absolute bottom-10 left-8 right-8">
+          <p className="text-white/90 text-2xl font-bold leading-snug mb-2">Unleash your<br />creativity today.</p>
+          <p className="text-white/55 text-sm">Join 12,000+ artists building their passion communities.</p>
+          {/* Stats row */}
+          <div className="flex gap-5 mt-5">
+            {[['12K+', 'Members'], ['4.9★', 'Rating'], ['₹49', 'to start']].map(([val, lbl]) => (
+              <div key={lbl} className="text-center">
+                <p className="text-white font-bold text-lg leading-none">{val}</p>
+                <p className="text-white/50 text-xs mt-1">{lbl}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── RIGHT – Form Panel ───────────────────────────────── */}
+      <div className="flex-1 flex flex-col justify-center items-center px-6 py-12 md:px-12 lg:px-16 overflow-y-auto">
+        {/* Back to Home */}
+        <div className="w-full max-w-[420px] mb-4">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 text-white/50 hover:text-white/90 text-sm font-medium transition-colors duration-200 group"
+          >
+            <ArrowLeft size={15} className="group-hover:-translate-x-0.5 transition-transform duration-200" />
+            Back to Home
+          </Link>
+        </div>
+
+        {/* Mobile logo */}
+        <div className="lg:hidden flex items-center gap-2 mb-8">
+          <div className="w-8 h-8 rounded-lg bg-[#d35400] flex items-center justify-center">
+            <Brush size={16} className="text-white" />
+          </div>
+          <span className="text-white font-bold text-lg">StudioSquad</span>
+        </div>
+
+        <div className="w-full max-w-[420px]">
+          {/* Heading */}
+          <div className="mb-8">
+            <h1 className="text-3xl md:text-4xl font-extrabold text-white leading-tight mb-2">
+              Join StudioSquad –{' '}
+              <span className="text-[#d35400]">Build</span> your passion community
+            </h1>
+          </div>
+
+          {/* Social buttons */}
+          <div className="flex flex-col gap-3 mb-7">
+            <SocialBtn onClick={handleGoogleSignIn} disabled={googleLoading}>
+              <GoogleIcon />
+              {googleLoading ? 'Signing in...' : 'Continue with Google'}
+            </SocialBtn>
+            <SocialBtn onClick={() => toast('Apple sign-in coming soon!')} disabled={false}>
+              <AppleIcon />
+              Continue with Apple
+            </SocialBtn>
+          </div>
+
+          {/* Divider */}
+          <div className="flex items-center gap-4 mb-7">
+            <div className="h-px bg-white/15 flex-1" />
+            <span className="text-white/40 text-xs font-medium uppercase tracking-widest">or</span>
+            <div className="h-px bg-white/15 flex-1" />
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <AuthInput
+              id="email"
+              label="Email"
+              type="email"
+              placeholder="Type here"
+              value={formData.email}
+              onChange={handleChange}
+              error={errors.email}
+            />
+            <AuthInput
+              id="password"
+              label="Password"
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Type here"
+              value={formData.password}
+              onChange={handleChange}
+              error={errors.password}
+              rightElement={
+                <button type="button" onClick={() => setShowPassword(v => !v)} className="text-white/40 hover:text-white/70 transition-colors">
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              }
+            />
+            <AuthInput
+              id="confirmPassword"
+              label="Confirm password"
+              type={showConfirm ? 'text' : 'password'}
+              placeholder="Type here"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              error={errors.confirmPassword}
+              rightElement={
+                <button type="button" onClick={() => setShowConfirm(v => !v)} className="text-white/40 hover:text-white/70 transition-colors">
+                  {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              }
+            />
+
+            {/* Terms checkbox */}
+            <div className="mt-1">
+              <label className="flex items-start gap-3 cursor-pointer group">
+                <div className="relative flex-shrink-0 mt-0.5">
+                  <input
+                    type="checkbox"
+                    id="agreedToTerms"
+                    checked={formData.agreedToTerms}
+                    onChange={handleChange}
+                    className="appearance-none w-4.5 h-4.5 border border-white/30 rounded bg-white/10 checked:bg-[#d35400] checked:border-[#d35400] transition-colors cursor-pointer w-[18px] h-[18px]"
+                  />
+                  {formData.agreedToTerms && (
+                    <svg className="absolute inset-0 m-auto w-2.5 h-2.5 text-white pointer-events-none" viewBox="0 0 10 10" fill="none">
+                      <path d="M2 5.5L4.5 8L8 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  )}
+                </div>
+                <span className="text-xs text-white/60 leading-relaxed">
+                  I agree to the{' '}
+                  <a href="#" className="text-white/90 underline underline-offset-2 hover:text-[#d35400] transition-colors">terms and conditions</a>
+                </span>
+              </label>
+              {errors.agreedToTerms && <p className="text-red-300 text-xs mt-1.5">{errors.agreedToTerms}</p>}
+            </div>
+
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-3.5 rounded-xl bg-[#f4ede4] hover:bg-white text-[#4e342e] font-bold text-base
+                transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/20
+                disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 mt-2"
+            >
+              {isLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.37 0 0 5.37 0 12h4z"/>
+                  </svg>
+                  Creating account...
+                </span>
+              ) : 'Sign up'}
+            </button>
+          </form>
+
+          {/* Divider */}
+          <div className="h-px bg-white/10 mt-7 mb-5" />
+
+          {/* Switch to login */}
+          <p className="text-center text-sm text-white/50">
+            Already have an account?{' '}
+            <Link to="/login" className="text-white/90 font-semibold hover:text-[#d35400] transition-colors underline underline-offset-2">
+              Sign in
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Signup;

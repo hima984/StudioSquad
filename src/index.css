@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  --color-earth-beige:  #f4ede4;
+  --color-earth-brown:  #4e342e;
+  --color-earth-orange: #d35400;
+  --color-earth-cream:  #faf7f2;
+  --color-earth-dark:   #3e2723;
+  --color-earth-light:  #fff;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: #f4ede4;
+    color: #4e342e;
+    font-family: "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+}
