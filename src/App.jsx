@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 
 // ── Components ──────────────────────────────────────────────────
 import Navbar from './components/Navbar';
+import BackToTop from './components/BackToTop';
 
 // ── Pages ───────────────────────────────────────────────────────
 import Home        from './pages/Home';
@@ -80,6 +81,9 @@ const App = () => {
         {/* ── 404 catch-all ── */}
         <Route path="*" element={<PageNotFound />} />
       </Routes>
+
+      {/* Global Back to Top Button */}
+      <BackToTop />
     </BrowserRouter>
   );
 };
